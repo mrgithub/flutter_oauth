@@ -46,6 +46,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  String bankUrl ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -117,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _launchURL() async {
-    const url = 'https://flutter.io';
+   // const url = 'https://flutter.io';
+    String url = bankUrl;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
