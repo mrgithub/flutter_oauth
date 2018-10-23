@@ -11,6 +11,9 @@ import 'dart:convert';
 
 void main() => runApp(new MyApp());
 
+Token accessToken;
+
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -125,7 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _processLogin() async {
 
-    txt.text = DateTime.now().second.toString()+": " + await getToken().toString();
+    accessToken = await getToken();
+    txt.text = DateTime.now().second.toString()+": " + accessToken.getAccess;
+
+    
   }
 
 
@@ -184,17 +190,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // delete this
 class Token {
-   String access;
+   String _access;
 //  String id;
 //  String username;
 //  String full_name;
 //  String profile_picture;
 
+  String get getAccess => _access;
+
   Token.fromMap(Map json) {
-    access = json['access_token'];
+    _access = json['access_token'];
 //    id = json['user']['id'];
 //    username = json['user']['username'];
 //    full_name = json['user']['full_name'];
 //    profile_picture = json['user']['profile_picture'];
   }
 }
+
