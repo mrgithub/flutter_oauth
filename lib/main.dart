@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
    // const url = 'https://flutter.io';
     String url = bankUrl;
     if (await canLaunch(url)) {
-      await launch(url);
+      await launch(url, forceSafariVC: true, forceWebView: true, enableJavaScript: true);
     } else {
       throw 'Could not launch $url';
     }
