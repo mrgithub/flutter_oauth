@@ -124,26 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _processLogin() async {
-//      Stream<String> onCode = await _server();
-////
-////      _launchURL();
-////      final String code = await onCode.first;
 
-    getToken();
+    txt.text = DateTime.now().second.toString()+": " + await getToken().toString();
   }
 
-//  _launchURL() async {
-//   // const url = 'https://flutter.io';
-//    //String url = bankUrl;
-//    const url ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
-//
-//    if (await canLaunch(url)) {
-//
-//      await launch(url, forceSafariVC: true, forceWebView: true, enableJavaScript: true);
-//    } else {
-//      throw 'Could not launch $url';
-//    }
-//  }
 
   Future<Token> getToken() async {
     const authenticateUrl =
@@ -161,37 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     flutterWebviewPlugin.launch(authenticateUrl);
     final String code = await onCode.first;
 
-//    curl -X POST \
-//    -d grant_type=authorization_code \
-//    -d client_id=${client_id} \
-//    -d client_secret=${client_secret} \s
-//    -d redirect_uri=${redirect_uri} \
-//    -d code=${code} \
-//    https://auth.truelayer.com/connect/token
-
-//    final http.Response response = await http.post(
-//        "https://api.instagram.com/oauth/access_token",
-//        body: {"redirect_uri": "http://localhost:8585", "client_secret": appSecret,
-//          "code": code, "grant_type": "authorization_code"});
-
-    print("************** GOT RESPONSE: oncode.first");
-    print(code);
-//    txt.text = code;
-    print("************** END OF RESPONSE");
-
     // post retrieved authorisation code to the server and exchange for a access token
-
-//    var body = json.encode({
-//      'client_id': clientId,
-//      'redirect_uri': redirectUrl,
-//      'client_secret': appSecret,
-//      'code': code,
-//      'grant_type': 'authorization_code'
-//    });
-//
-//    print("body is: " + body);
-//    final http.Response response = await http.post(tokenUrl, body: body);
-
     final http.Response response = await http.post(tokenUrl, body: {
       'client_id': clientId,
       'redirect_uri': redirectUrl,
@@ -202,16 +156,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     flutterWebviewPlugin.close();
 
-    print("************** GOT RESPONSE: json body");
-    txt.text = jsonDecode(response.body).toString() +
-        " " +
-        DateTime.now().second.toString();
-    print(jsonDecode(response.body));
-    print("************** END OF RESPONSE");
-
+    print("********************* " + response.body);
     return new Token.fromMap(jsonDecode(response.body));
   }
 
+  // server that listens to the postback from the authentication server
   Future<Stream<String>> _localServer() async {
     final StreamController<String> onCode = new StreamController();
     HttpServer server =
@@ -233,18 +182,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// delete this
 class Token {
-  String access;
-  String id;
-  String username;
-  String full_name;
-  String profile_picture;
+   String access;
+//  String id;
+//  String username;
+//  String full_name;
+//  String profile_picture;
 
   Token.fromMap(Map json) {
     access = json['access_token'];
-    id = json['user']['id'];
-    username = json['user']['username'];
-    full_name = json['user']['full_name'];
-    profile_picture = json['user']['profile_picture'];
+//    id = json['user']['id'];
+//    username = json['user']['username'];
+//    full_name = json['user']['full_name'];
+//    profile_picture = json['user']['profile_picture'];
   }
 }
