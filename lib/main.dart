@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+
+
+import 'dart:io';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
 
 void main() => runApp(new MyApp());
 
@@ -46,7 +55,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  String bankUrl ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
 
 
   void _incrementCounter() {
@@ -103,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             new RaisedButton(
-              onPressed: _launchURL,
+              onPressed: _processLogin, //_launchURL,
               child: new Text('Show Flutter homepage1'),
             ),
 
@@ -119,15 +127,106 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _launchURL() async {
-   // const url = 'https://flutter.io';
-    String url = bankUrl;
-    if (await canLaunch(url)) {
-      await launch(url, forceSafariVC: true, forceWebView: true, enableJavaScript: true);
-    } else {
-      throw 'Could not launch $url';
-    }
+  _processLogin() async {
+//      Stream<String> onCode = await _server();
+////
+////      _launchURL();
+////      final String code = await onCode.first;
+
+
+    print(getToken());
   }
 
+//  _launchURL() async {
+//   // const url = 'https://flutter.io';
+//    //String url = bankUrl;
+//    const url ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+//
+//    if (await canLaunch(url)) {
+//
+//      await launch(url, forceSafariVC: true, forceWebView: true, enableJavaScript: true);
+//    } else {
+//      throw 'Could not launch $url';
+//    }
+//  }
 
+  Future<Token> getToken() async {
+
+    const url ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+    const clientId ="testapp-vylt";
+    const redirectUrl = "http://localhost:3000";
+    const appSecret= "legdky8lt3n5r622p4hfbi";
+    const tokenUrl = "https://auth.truelayer.com/connect/token";
+
+    Stream<String> onCode = await _localServer();
+    final flutterWebviewPlugin = new FlutterWebviewPlugin();
+    flutterWebviewPlugin.launch(url);
+    final String code = await onCode.first;
+
+//    curl -X POST \
+//    -d grant_type=authorization_code \
+//    -d client_id=${client_id} \
+//    -d client_secret=${client_secret} \
+//    -d redirect_uri=${redirect_uri} \
+//    -d code=${code} \
+//    https://auth.truelayer.com/connect/token
+
+//    final http.Response response = await http.post(
+//        "https://api.instagram.com/oauth/access_token",
+//        body: {"redirect_uri": "http://localhost:8585", "client_secret": appSecret,
+//          "code": code, "grant_type": "authorization_code"});
+
+    print("************** GOT RESPONSE: oncode.first");
+    print (code);
+    print("************** END OF RESPONSE");
+
+    final http.Response response = await http.post(
+        tokenUrl,
+        body: {"client_id": clientId, "redirect_uri": redirectUrl, "client_secret": appSecret,
+          "code": code, "grant_type": "authorization_code"});
+
+    flutterWebviewPlugin.close();
+
+    print("************** GOT RESPONSE: json body");
+    print (jsonDecode(response.body));
+    print("************** END OF RESPONSE");
+
+    return new Token.fromMap(jsonDecode(response.body));
+  }
+
+  Future<Stream<String>> _localServer() async {
+    final StreamController<String> onCode = new StreamController();
+    HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
+    server.listen((HttpRequest request) async {
+      final String code = request.uri.queryParameters["code"];
+      request.response
+        ..statusCode = 200
+        ..headers.set("Content-Type", ContentType.html.mimeType)
+        //..write("<html><h1>You can now close this window</h1></html>")
+        ;
+      await request.response.close();
+      await server.close(force: true);
+      onCode.add(code);
+      await onCode.close();
+    });
+
+    return onCode.stream;
+  }
+
+}
+
+class Token {
+  String access;
+  String id;
+  String username;
+  String full_name;
+  String profile_picture;
+
+  Token.fromMap(Map json){
+    access = json['access_token'];
+    id = json['user']['id'];
+    username = json['user']['username'];
+    full_name = json['user']['full_name'];
+    profile_picture = json['user']['profile_picture'];
+  }
 }
