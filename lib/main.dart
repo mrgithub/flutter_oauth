@@ -55,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-
+  var txt = new TextEditingController();
 
   void _incrementCounter() {
     setState(() {
@@ -115,6 +115,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: new Text('Show Flutter homepage1'),
             ),
 
+            new TextField(controller: txt),
+
 
           ],
         ),
@@ -133,8 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
 ////      _launchURL();
 ////      final String code = await onCode.first;
 
-
-    print(getToken());
+    getToken();
   }
 
 //  _launchURL() async {
@@ -152,21 +153,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Token> getToken() async {
 
-    const url ="https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=1766021341&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+    const authenticateUrl =
+      "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+
     const clientId ="testapp-vylt";
-    const redirectUrl = "http://localhost:3000";
+    const redirectUrl = "https://console.truelayer.com/redirect-page";  //"http://localhost:3000";
     const appSecret= "legdky8lt3n5r622p4hfbi";
     const tokenUrl = "https://auth.truelayer.com/connect/token";
 
     Stream<String> onCode = await _localServer();
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebviewPlugin.launch(url);
+
+    // direct user to authentication server and retrieve the authorisation code
+    flutterWebviewPlugin.launch(authenticateUrl);
     final String code = await onCode.first;
 
 //    curl -X POST \
 //    -d grant_type=authorization_code \
 //    -d client_id=${client_id} \
-//    -d client_secret=${client_secret} \
+//    -d client_secret=${client_secret} \s
 //    -d redirect_uri=${redirect_uri} \
 //    -d code=${code} \
 //    https://auth.truelayer.com/connect/token
@@ -178,8 +183,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     print("************** GOT RESPONSE: oncode.first");
     print (code);
+//    txt.text = code;
     print("************** END OF RESPONSE");
 
+    // post retrieved authorisation code to the server and exchange for a access token
     final http.Response response = await http.post(
         tokenUrl,
         body: {"client_id": clientId, "redirect_uri": redirectUrl, "client_secret": appSecret,
@@ -188,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
     flutterWebviewPlugin.close();
 
     print("************** GOT RESPONSE: json body");
+    txt.text = jsonDecode(response.body).toString() + " " + DateTime.now().second.toString();
     print (jsonDecode(response.body));
     print("************** END OF RESPONSE");
 
