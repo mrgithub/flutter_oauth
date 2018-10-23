@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 //import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-
 import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
+//import 'package:http/browser_client.dart';
 
 void main() => runApp(new MyApp());
 
@@ -108,16 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
-
-
             new RaisedButton(
               onPressed: _processLogin, //_launchURL,
               child: new Text('Show Flutter homepage1'),
             ),
-
             new TextField(controller: txt),
-
-
           ],
         ),
       ),
@@ -152,14 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
 //  }
 
   Future<Token> getToken() async {
-
     const authenticateUrl =
-      "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
+        "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
 
-    const clientId ="testapp-vylt";
-    const redirectUrl = "https://console.truelayer.com/redirect-page";  //"http://localhost:3000";
-    const appSecret= "legdky8lt3n5r622p4hfbi";
-    const tokenUrl = "https://auth.truelayer.com/connect/token";
+    const clientId = 'testapp-vylt';
+    const redirectUrl = 'http://localhost:3000/callback';
+    const appSecret = 'legdky8lt3n5r622p4hfbi';
+    const tokenUrl = 'https://auth.truelayer.com/connect/token';
 
     Stream<String> onCode = await _localServer();
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
@@ -182,21 +175,38 @@ class _MyHomePageState extends State<MyHomePage> {
 //          "code": code, "grant_type": "authorization_code"});
 
     print("************** GOT RESPONSE: oncode.first");
-    print (code);
+    print(code);
 //    txt.text = code;
     print("************** END OF RESPONSE");
 
     // post retrieved authorisation code to the server and exchange for a access token
-    final http.Response response = await http.post(
-        tokenUrl,
-        body: {"client_id": clientId, "redirect_uri": redirectUrl, "client_secret": appSecret,
-          "code": code, "grant_type": "authorization_code"});
+
+//    var body = json.encode({
+//      'client_id': clientId,
+//      'redirect_uri': redirectUrl,
+//      'client_secret': appSecret,
+//      'code': code,
+//      'grant_type': 'authorization_code'
+//    });
+//
+//    print("body is: " + body);
+//    final http.Response response = await http.post(tokenUrl, body: body);
+
+    final http.Response response = await http.post(tokenUrl, body: {
+      'client_id': clientId,
+      'redirect_uri': redirectUrl,
+      'client_secret': appSecret,
+      'code': code,
+      'grant_type': 'authorization_code'
+    });
 
     flutterWebviewPlugin.close();
 
     print("************** GOT RESPONSE: json body");
-    txt.text = jsonDecode(response.body).toString() + " " + DateTime.now().second.toString();
-    print (jsonDecode(response.body));
+    txt.text = jsonDecode(response.body).toString() +
+        " " +
+        DateTime.now().second.toString();
+    print(jsonDecode(response.body));
     print("************** END OF RESPONSE");
 
     return new Token.fromMap(jsonDecode(response.body));
@@ -204,14 +214,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Stream<String>> _localServer() async {
     final StreamController<String> onCode = new StreamController();
-    HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
+    HttpServer server =
+        await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
     server.listen((HttpRequest request) async {
       final String code = request.uri.queryParameters["code"];
       request.response
-        ..statusCode = 200
-        ..headers.set("Content-Type", ContentType.html.mimeType)
-        //..write("<html><h1>You can now close this window</h1></html>")
-        ;
+            ..statusCode = 200
+            ..headers.set("Content-Type", ContentType.html.mimeType)
+          ..write("<html>window closing</html>")
+          ;
       await request.response.close();
       await server.close(force: true);
       onCode.add(code);
@@ -220,7 +231,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return onCode.stream;
   }
-
 }
 
 class Token {
@@ -230,7 +240,7 @@ class Token {
   String full_name;
   String profile_picture;
 
-  Token.fromMap(Map json){
+  Token.fromMap(Map json) {
     access = json['access_token'];
     id = json['user']['id'];
     username = json['user']['username'];
