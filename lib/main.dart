@@ -145,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     var d = jsonDecode(response.body);
+    print("step 1b: $d" );
     print("step 2 ********************* " + response.body);
 
     final responseJson = json.decode(response.body);
