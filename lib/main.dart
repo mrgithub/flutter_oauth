@@ -179,21 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
   _processLogin() async {
     accessToken = await getToken();
     txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
-
-//    // get list of accounts
-//    const listAccountsUri = "https://api.truelayer.com/data/v1/accounts";
-//
-//    var x = accessToken.getAccess;
-//
-//    final response = await http.get(listAccountsUri,
-//      headers: {
-//        'authorization' : 'bearer $x',
-//        'content-type':'application/json'
-//      },
-//    );
-//
-//
-//    print("Login ********************* " + response.body);
   }
 
   Future<Token> getToken() async {
@@ -227,15 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Token.fromMap(jsonDecode(response.body));
   }
 
-//  Future<Post> fetchPost() async {
-//    final response = await http.get(
-//      'https://jsonplaceholder.typicode.com/posts/1',
-//      headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
-//    );
-//    final responseJson = json.decode(response.body);
-//
-//    return Post.fromJson(responseJson);
-//  }
 
   // server that listens to the postback from the authentication server
   Future<Stream<String>> _localServer() async {
@@ -261,67 +237,13 @@ class _MyHomePageState extends State<MyHomePage> {
 // delete this
 class Token {
   String _access;
-//  String id;
-//  String username;
-//  String full_name;
-//  String profile_picture;
-
   String get getAccess => _access;
 
   Token.fromMap(Map json) {
     _access = json['access_token'];
-//    id = json['user']['id'];
-//    username = json['user']['username'];
-//    full_name = json['user']['full_name'];
-//    profile_picture = json['user']['profile_picture'];
   }
 }
 
-//class AccountNumber {
-//  final String iban;	//	ISO 13616-1:2007 international bank number
-//  final String number;	//	Bank account number
-//  final String sort_code;	//	United Kingdom SORT code
-//  final String swift_bic;	//	ISO 9362:2009 Business Identifier Codes
-//
-//  AccountNumber.fromMap(Map json) {
-//    iban = json['access_token'];
-//    number = json['user']['id'];
-//    sort_code = json['user']['username'];
-//    swift_bic = json['user']['full_name'];
-//  }
-//}
-//
-//
-//class Accounts {
-//  final int userId;
-//  final int id;
-//  final String title;
-//  final String body;
-//
-//
-//  final String account_id;	//	Unique identifier of the account
-//  final String account_type;	//	Type of the account
-//  final AccountNumber account_number;
-//  final String currency;	//	ISO 4217 alpha-3 currency code of the account
-//
-//  final String display_name	//	Human readable name of the account
-//   update_timestamp	datetime	Last update time of the account information
-//  provider.display_name	string	Display name for the Provider
-//  provider.logo_uri	string	Uri for the Provider logo
-//  provider.provider_id
-//
-//
-//  Accounts({this.userId, this.id, this.title, this.body});
-//
-//  factory Accounts.fromJson(Map<String, dynamic> json) {
-//    return Accounts(
-//      userId: json['userId'],
-//      id: json['id'],
-//      title: json['title'],
-//      body: json['body'],
-//    );
-//  }
-//
 
 class AccountDTO {}
 
