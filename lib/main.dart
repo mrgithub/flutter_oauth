@@ -13,7 +13,6 @@ void main() => runApp(new MyApp());
 
 Token accessToken;
 
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -112,7 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new RaisedButton(
               onPressed: _processLogin, //_launchURL,
-              child: new Text('Show Flutter homepage1'),
+              child: new Text('Get Token'),
+            ),
+            new RaisedButton(
+              onPressed: _getOneAccount,
+              child: new Text('Get One Account'),
+            ),
+            new RaisedButton(
+              onPressed: _getAccountBalance,
+              child: new Text('Get Balance'),
             ),
             new TextField(controller: txt),
           ],
@@ -126,35 +133,68 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _processLogin() async {
+  _getOneAccount() async {
+    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
 
-    accessToken = await getToken();
-    txt.text = DateTime.now().second.toString()+": " + accessToken.getAccess;
-
-//    print("step 1 ********************* ");
-    const listAccountsUri = "https://api.truelayer.com/data/v1/accounts";
+    const oneAccountUri =
+        "https://api.truelayer.com/data/v1/accounts/$oneAccountId";
 
     var x = accessToken.getAccess;
 
-    final response = await http.get(listAccountsUri,
+    final response = await http.get(
+      oneAccountUri,
       headers: {
-        'authorization' : 'bearer $x',
-        'content-type':'application/json'
+        'authorization': 'bearer $x',
+        'content-type': 'application/json'
       },
     );
 
+    txt.text = DateTime.now().second.toString() + ": Account: ";
 
-    var d = jsonDecode(response.body);
-    print("step 1b: $d" );
-    print("step 2 ********************* " + response.body);
-
-    final responseJson = json.decode(response.body);
-    print("listAccounts ********************* " + response.body);
-
+    print("one account ********************* " + response.body);
   }
 
+  _getAccountBalance() async {
+    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
 
+    const accountBalanceUri =
+        "https://api.truelayer.com/data/v1/accounts/$oneAccountId/balance";
 
+    var token = accessToken.getAccess;
+
+    final response = await http.get(
+      accountBalanceUri,
+      headers: {
+        'authorization': 'bearer $token',
+        'content-type': 'application/json'
+      },
+    );
+
+    AccountBalanceDTO d = new AccountBalanceDTO.fromJson(jsonDecode(response.body));
+
+    print("account balance ********************* " + response.body);
+    txt.text = DateTime.now().second.toString() + ": Balance: " + d.accountBalance.available.toString();
+  }
+
+  _processLogin() async {
+    accessToken = await getToken();
+    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
+
+//    // get list of accounts
+//    const listAccountsUri = "https://api.truelayer.com/data/v1/accounts";
+//
+//    var x = accessToken.getAccess;
+//
+//    final response = await http.get(listAccountsUri,
+//      headers: {
+//        'authorization' : 'bearer $x',
+//        'content-type':'application/json'
+//      },
+//    );
+//
+//
+//    print("Login ********************* " + response.body);
+  }
 
   Future<Token> getToken() async {
     const authenticateUrl =
@@ -183,10 +223,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     flutterWebviewPlugin.close();
 
-    print("getToken ********************* " + response.body);
+    // print("getToken ********************* " + response.body);
     return new Token.fromMap(jsonDecode(response.body));
   }
-
 
 //  Future<Post> fetchPost() async {
 //    final response = await http.get(
@@ -198,9 +237,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //    return Post.fromJson(responseJson);
 //  }
 
-
-
-
   // server that listens to the postback from the authentication server
   Future<Stream<String>> _localServer() async {
     final StreamController<String> onCode = new StreamController();
@@ -209,10 +245,9 @@ class _MyHomePageState extends State<MyHomePage> {
     server.listen((HttpRequest request) async {
       final String code = request.uri.queryParameters["code"];
       request.response
-            ..statusCode = 200
-            ..headers.set("Content-Type", ContentType.html.mimeType)
-          ..write("<html>window closing</html>")
-          ;
+        ..statusCode = 200
+        ..headers.set("Content-Type", ContentType.html.mimeType)
+        ..write("<html>window closing</html>");
       await request.response.close();
       await server.close(force: true);
       onCode.add(code);
@@ -225,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // delete this
 class Token {
-   String _access;
+  String _access;
 //  String id;
 //  String username;
 //  String full_name;
@@ -287,3 +322,70 @@ class Token {
 //    );
 //  }
 //
+
+class AccountDTO {}
+
+class AccountDetailsDTO {
+  String iban; //	ISO 13616-1:2007 international bank number
+  String number; //	Bank account number
+  String sort_code; //	United Kingdom SORT code
+  String swift_bic; //	ISO 9362:2009 Business Identifier Codes
+
+  AccountDetailsDTO({this.iban, this.number, this.sort_code, this.swift_bic});
+
+  factory AccountDetailsDTO.fromJson(Map<String, dynamic> parsedJson) {
+    return AccountDetailsDTO(
+        iban: parsedJson['iban'],
+        number: parsedJson['number'],
+        sort_code: parsedJson['sort_code'],
+        swift_bic: parsedJson['swift_bic']);
+  }
+}
+
+class ProviderDTO {}
+
+class AccountBalance {
+  double available; //	Available balance, including pre-arranged overdraft limit
+  String currency; //	ISO 4217 alpha-3 currency code
+  double current; //	Current balance
+  double
+  overdraft; //	Pre-arranged overdraft limit. Available for all "TRANSACTION” and “BUSINESS_TRANSACTION” account types. See Account Types
+  String update_timestamp; // datetime	Last update time
+
+  AccountBalance(
+      {this.available,
+        this.currency,
+        this.current,
+        this.overdraft,
+        this.update_timestamp});
+
+  factory AccountBalance.fromJson(Map<String, dynamic> parsedJson) {
+    return AccountBalance(
+        available: parsedJson['available'],
+        currency: parsedJson['currency'],
+        current: parsedJson['current'],
+        overdraft: parsedJson['overdraft'],
+        update_timestamp: parsedJson['update_timestamp']);
+  }
+}
+
+class AccountBalanceDTO {
+  AccountBalance accountBalance;
+  String status;
+
+  AccountBalanceDTO({
+    this.accountBalance,
+    this.status});
+
+  factory AccountBalanceDTO.fromJson(Map<String, dynamic> parsedJson) {
+
+
+    var list = parsedJson['results'] as List;
+    print(list.runtimeType);
+    List<AccountBalance> balanceList = list.map((i) => AccountBalance.fromJson(i)).toList();
+
+    return AccountBalanceDTO(
+        accountBalance: balanceList.first,
+        status: parsedJson['status']);
+  }
+}
