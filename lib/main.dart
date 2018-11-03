@@ -10,6 +10,9 @@ import 'dart:convert';
 import 'dtos/accountBalanceDTO.dart';
 import 'dtos/accountsDTO.dart';
 
+import 'package:flutter_picker/flutter_picker.dart';
+//import 'PickerData.dart';
+
 //import 'package:http/browser_client.dart';
 
 void main() => runApp(new MyApp());
@@ -60,6 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   var txt = new TextEditingController();
+
+//picker stuff??
+  final double listSpec = 8.0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String stateText;
 
   void _incrementCounter() {
     setState(() {
@@ -205,8 +213,133 @@ class _MyHomePageState extends State<MyHomePage> {
 
     txt.text = DateTime.now().second.toString() +
         ": accounts List: " +
-        d.accounts.length.toString() + d.accounts.first.accountNumber.sort_code.toString() + " ..."
-      + d.accounts.first.provider.display_name;
+        d.accounts.length.toString() +
+        d.accounts.first.accountNumber.sort_code.toString() +
+        " ..." +
+        d.accounts.first.provider.display_name;
+
+    showPicker(context);
+  }
+
+  showPicker(BuildContext context) {
+    const PickerData2 = '''
+[
+    [
+        1,
+        2,
+        3,
+        4
+    ],
+    [
+        11,
+        22,
+        33,
+        44
+    ],
+    [
+        "aaa",
+        "bbb",
+        "ccc"
+    ]
+]
+    ''';
+    const PickerData = '''
+[
+    {
+        "a": [
+            {
+                "a1": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            {
+                "a2": [
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            },
+            {
+                "a3": [
+                    9,
+                    10,
+                    11,
+                    12
+                ]
+            }
+        ]
+    },
+    {
+        "b": [
+            {
+                "b1": [
+                    11,
+                    22,
+                    33,
+                    44
+                ]
+            },
+            {
+                "b2": [
+                    55,
+                    66,
+                    77,
+                    88
+                ]
+            },
+            {
+                "b3": [
+                    99,
+                    1010,
+                    1111,
+                    1212
+                ]
+            }
+        ]
+    },
+    {
+        "c": [
+            {
+                "c1": [
+                    "a",
+                    "b",
+                    "c"
+                ]
+            },
+            {
+                "c2": [
+                    "aa",
+                    "bb",
+                    "cc"
+                ]
+            },
+            {
+                "c3": [
+                    "aaa",
+                    "bbb",
+                    "ccc"
+                ]
+            }
+        ]
+    }
+]
+    ''';
+
+    print("************* PICKER ***");
+
+    new Picker(
+        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
+        changeToFirst: true,
+        hideHeader: false,
+        onConfirm: (Picker picker, List value) {
+          print(value.toString());
+          print(picker.adapter.text);
+        }
+    ).showModal(this.context); //_scaffoldKey.currentState);
   }
 
   _processLogin() async {
