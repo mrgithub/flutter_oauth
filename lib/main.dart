@@ -329,17 +329,72 @@ class _MyHomePageState extends State<MyHomePage> {
 ]
     ''';
 
+    const PickerData3 = '''
+
+    [
+    [
+        "aaa",
+        "bbb",
+        "ccc"
+    ]
+           
+    ]
+
+    ''';
+
     print("************* PICKER ***");
 
+//    new Picker(
+//        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
+//        hideHeader: true,
+//        title: new Text("Select Data"),
+//        onConfirm: (Picker picker, List value) {
+//          print("1:: " + value.toString() + "  2:: ");
+//          print(picker.getSelectedValues());
+//        }
+//    ).showDialog(context);
+
+    var x = new JsonDecoder().convert(PickerData3);
+    print("**JSON**:  " + x.runtimeType.toString() + " : " + x.toString());
+   // List<dynamic> a = ["aa", "bb"];
+    var a = new List<dynamic>();
+    a.add("1231234");
+    a.add("bbbbb");
+
+    List<dynamic> b = [a];
+    print(b.toString());
+
     new Picker(
-        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
-        changeToFirst: true,
-        hideHeader: false,
+        //works with an array of array
+        //adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData3), isArray: true),
+
+        adapter: PickerDataAdapter<String>(pickerdata: b, isArray: true),
+
+//      // works
+//        adapter: PickerDataAdapter(data: [
+//          new PickerItem(text: Icon(Icons.add), value: Icons.add, children: [
+//            new PickerItem(text: Icon(Icons.more)),
+//            new PickerItem(text: Icon(Icons.aspect_ratio)),
+//            new PickerItem(text: Icon(Icons.android)),
+//            new PickerItem(text: Icon(Icons.menu)),
+//          ]),
+//          new PickerItem(text: Icon(Icons.title), value: Icons.title, children: [
+//            new PickerItem(text: Icon(Icons.more_vert)),
+//            new PickerItem(text: Icon(Icons.ac_unit)),
+//            new PickerItem(text: Icon(Icons.access_alarm)),
+//            new PickerItem(text: Icon(Icons.account_balance)),
+//          ]),
+//
+//          new PickerItem(text: Icon(Icons.title), value: Icons.title),
+//        ]),
+
+        hideHeader: true,
+        title: new Text("Please Select"),
         onConfirm: (Picker picker, List value) {
           print(value.toString());
-          print(picker.adapter.text);
+          print(picker.getSelectedValues());
         }
-    ).showModal(this.context); //_scaffoldKey.currentState);
+    ).showDialog(context);
   }
 
   _processLogin() async {
