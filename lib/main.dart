@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'dtos/accountBalanceDTO.dart';
+import 'dtos/accountsDTO.dart';
 
 //import 'package:http/browser_client.dart';
 
@@ -123,6 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _getAccountBalance,
               child: new Text('Get Balance'),
             ),
+            new RaisedButton(
+              onPressed: _getAccountsList,
+              child: new Text('List Accounts'),
+            ),
             new TextField(controller: txt),
           ],
         ),
@@ -172,10 +177,36 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
 
-    AccountBalanceDTO d = new AccountBalanceDTO.fromJson(jsonDecode(response.body));
+    AccountBalanceDTO d =
+        new AccountBalanceDTO.fromJson(jsonDecode(response.body));
 
     print("account balance ********************* " + response.body);
-    txt.text = DateTime.now().second.toString() + ": Balance: " + d.accountBalance.available.toString();
+    txt.text = DateTime.now().second.toString() +
+        ": Balance: " +
+        d.accountBalance.available.toString();
+  }
+
+  _getAccountsList() async {
+    const accountListUri = "https://api.truelayer.com/data/v1/accounts";
+
+    var token = accessToken.getAccess;
+
+    final response = await http.get(
+      accountListUri,
+      headers: {
+        'authorization': 'bearer $token',
+        'content-type': 'application/json'
+      },
+    );
+
+    print("account list ********************* " + response.body);
+
+    var d = new AccountsDTO.fromJson(jsonDecode(response.body));
+
+    txt.text = DateTime.now().second.toString() +
+        ": accounts List: " +
+        d.accounts.length.toString() + d.accounts.first.accountNumber.sort_code.toString() + " ..."
+      + d.accounts.first.provider.display_name;
   }
 
   _processLogin() async {
@@ -214,7 +245,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Token.fromMap(jsonDecode(response.body));
   }
 
-
   // server that listens to the postback from the authentication server
   Future<Stream<String>> _localServer() async {
     final StreamController<String> onCode = new StreamController();
@@ -236,7 +266,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// delete this
 class Token {
   String _access;
   String get getAccess => _access;
@@ -245,32 +274,3 @@ class Token {
     _access = json['access_token'];
   }
 }
-
-
-class AccountDTO {}
-
-class AccountDetailsDTO {
-  String iban; //	ISO 13616-1:2007 international bank number
-  String number; //	Bank account number
-  String sort_code; //	United Kingdom SORT code
-  String swift_bic; //	ISO 9362:2009 Business Identifier Codes
-
-  AccountDetailsDTO({this.iban, this.number, this.sort_code, this.swift_bic});
-
-  factory AccountDetailsDTO.fromJson(Map<String, dynamic> parsedJson) {
-    return AccountDetailsDTO(
-        iban: parsedJson['iban'],
-        number: parsedJson['number'],
-        sort_code: parsedJson['sort_code'],
-        swift_bic: parsedJson['swift_bic']);
-  }
-}
-
-class ProviderDTO {
-
-
-}
-
-
-
-
