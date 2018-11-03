@@ -218,8 +218,16 @@ class _MyHomePageState extends State<MyHomePage> {
         " ..." +
         d.accounts.first.provider.display_name;
 
-    showPicker(context);
+    //showPicker(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailScreen(accountsDTO: d),
+      ),
+    );
   }
+
+
 
   showPicker(BuildContext context) {
     const PickerData2 = '''
@@ -460,5 +468,43 @@ class Token {
 
   Token.fromMap(Map json) {
     _access = json['access_token'];
+  }
+}
+
+
+class DetailScreen extends StatelessWidget {
+  // Declare a field that holds the Todo
+  final AccountsDTO accountsDTO;
+
+  // In the constructor, require a Todo
+  DetailScreen({Key key, @required this.accountsDTO}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Use the Todo to create our UI
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Accounts'),
+      ),
+      body: ListView.builder(
+        itemCount: accountsDTO.accounts.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(accountsDTO.accounts[index].account_id),
+            // When a user taps on the ListTile, navigate to the DetailScreen.
+            // Notice that we're not only creating a DetailScreen, we're
+            // also passing the current todo through to it!
+            onTap: () {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => DetailScreen(todo: todos[index]),
+//                ),
+//              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
