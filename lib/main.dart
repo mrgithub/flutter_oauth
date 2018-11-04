@@ -223,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailScreen(accountsDTO: d),
+        builder: (context) => AccountListScreen(accountsDTO: d),
       ),
     );
   }
@@ -408,7 +408,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _processLogin() async {
     accessToken = await getToken();
-    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
+    //Token.fromMap = await getToken();
+
+    txt.text = DateTime.now().second.toString() + ": " + accessToken._access;
   }
 
   Future<Token> getToken() async {
@@ -473,12 +475,13 @@ class Token {
 }
 
 
-class DetailScreen extends StatelessWidget {
+
+class AccountListScreen extends StatelessWidget {
 
   final AccountsDTO accountsDTO;
 
   // In the constructor, requires the accounts DTO
-  DetailScreen({Key key, @required this.accountsDTO}) : super(key: key);
+  AccountListScreen({Key key, @required this.accountsDTO}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -502,10 +505,52 @@ class DetailScreen extends StatelessWidget {
             subtitle: Text(item.account_id),
 
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OneAccountScreen(account : item),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+class OneAccountScreen extends StatelessWidget {
+
+  final Account account;
+
+  // In the constructor, requires the accounts DTO
+  OneAccountScreen({Key key, @required this.account}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(account.accountNumber.sort_code + " " + account.accountNumber.number),
+      ),
+      body: ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) {
+
+          var item = account;
+
+          return ListTile(
+            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+
+            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
+            subtitle: Text(item.account_id),
+
+            onTap: () { _getTransactions();
 //              Navigator.push(
 //                context,
 //                MaterialPageRoute(
-//                  builder: (context) => DetailScreen(todo: todos[index]),
+//                  builder: (context) => AccountListScreen(todo: todos[index]),
 //                ),
 //              );
             },
@@ -514,7 +559,33 @@ class DetailScreen extends StatelessWidget {
       ),
     );
   }
+
+  _getTransactions() async {
+//    accessToken = await getToken();
+//    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
+    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
+
+    // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
+    const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
+
+    var x = accessToken.getAccess;
+
+    final response = await http.get(
+      getAccountTransactionsUri,
+      headers: {
+        'authorization': 'bearer $x',
+        'content-type': 'application/json'
+      },
+    );
+
+    //txt.text = DateTime.now().second.toString() + ": Account: ";
+
+    print("transactions ********************* " + response.body);
+
+  }
+
 }
+
 
 //class ContactList extends StatelessWidget {
 //
