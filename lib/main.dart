@@ -414,6 +414,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
+
   Future<Credentials> getToken() async {
     const authenticateUrl =
         "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
@@ -476,13 +477,13 @@ class Credentials {
   // **
 
   // assign token from the json map
-  static String token;
+  static String _token;
   Credentials.fromMap(Map json) {
-    token = json['access_token'];
+    _token = json['access_token'];
   }
 
   // public getter for the static variable
-  String get getToken => token;
+  String get getToken => _token;
 }
 
 class Token {
