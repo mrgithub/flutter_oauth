@@ -9,6 +9,7 @@ import 'dart:convert';
 
 import 'dtos/accountBalanceDTO.dart';
 import 'dtos/accountsDTO.dart';
+import 'models/account.dart';
 
 import 'package:flutter_picker/flutter_picker.dart';
 //import 'PickerData.dart';
@@ -473,27 +474,33 @@ class Token {
 
 
 class DetailScreen extends StatelessWidget {
-  // Declare a field that holds the Todo
+
   final AccountsDTO accountsDTO;
 
-  // In the constructor, require a Todo
+  // In the constructor, requires the accounts DTO
   DetailScreen({Key key, @required this.accountsDTO}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Use the Todo to create our UI
+
+    var accounts = accountsDTO.accounts;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Accounts'),
       ),
       body: ListView.builder(
-        itemCount: accountsDTO.accounts.length,
+        itemCount: accounts.length,
         itemBuilder: (context, index) {
+
+          var item = accounts[index];
+
           return ListTile(
-            title: Text(accountsDTO.accounts[index].account_id),
-            // When a user taps on the ListTile, navigate to the DetailScreen.
-            // Notice that we're not only creating a DetailScreen, we're
-            // also passing the current todo through to it!
+            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+
+            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
+            subtitle: Text(item.account_id),
+
             onTap: () {
 //              Navigator.push(
 //                context,
@@ -508,3 +515,47 @@ class DetailScreen extends StatelessWidget {
     );
   }
 }
+
+//class ContactList extends StatelessWidget {
+//
+//  final List<Contact> _contacts;
+//
+//  ContactList(this._contacts);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return new MaterialList(
+//        type: MaterialListType.twoLine,
+//        padding: new EdgeInsets.symmetric(vertical: 8.0),
+//        children: _buildContactList()
+//    );
+//  }
+//
+//  List<_ContactListItem> _buildContactList() {
+//    return _contacts.map((contact) => new _ContactListItem(contact))
+//        .toList();
+//  }
+//
+//}
+//
+//
+//
+//class _ContactListItem extends ListItem {
+//
+//  _ContactListItem(Contact contact) :
+//        super(
+//          title : new Text(contact.fullName),
+//          subtitle: new Text(contact.email),
+//          leading: new CircleAvatar(
+//              child: new Text(contact.fullName[0])
+//          )
+//      );
+//
+//}
+//
+//class Contact {
+//  final String fullName;
+//  final String email;
+//
+//  const Contact({this.fullName, this.email});
+//}
