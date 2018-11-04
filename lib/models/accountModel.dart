@@ -1,5 +1,5 @@
-import 'accountNumber.dart';
-import 'provider.dart';
+import 'accountNumberModel.dart';
+import 'providerModel.dart';
 
 class Account {
   String account_id; //	Unique identifier of the account

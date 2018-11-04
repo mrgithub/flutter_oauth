@@ -1,4 +1,4 @@
-import '../models/account.dart';
+import '../models/accountModel.dart';
 
 class AccountsDTO {
   List<Account> accounts;

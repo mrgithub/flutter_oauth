@@ -1,4 +1,4 @@
-import '../models/accountBalance.dart';
+import '../models/accountBalanceModel.dart';
 
 class AccountBalanceDTO {
   AccountBalance accountBalance;

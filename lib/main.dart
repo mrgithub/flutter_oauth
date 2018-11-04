@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-//import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-import 'dart:io';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'dtos/accountBalanceDTO.dart';
 import 'dtos/accountsDTO.dart';
-import 'models/account.dart';
+
+import 'helpers/credentialsHelper.dart';
 
 import 'package:flutter_picker/flutter_picker.dart';
-//import 'PickerData.dart';
 
-//import 'package:http/browser_client.dart';
+import 'views/accountListView.dart';
 
 void main() => runApp(new MyApp());
 
@@ -38,7 +34,7 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(title: 'MBank'),
     );
   }
 }
@@ -66,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var txt = new TextEditingController();
 
-//picker stuff??
-  final double listSpec = 8.0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String stateText;
+////picker stuff??
+//  final double listSpec = 8.0;
+//  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+//  String stateText;
 
   void _incrementCounter() {
     setState(() {
@@ -231,181 +227,181 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-  showPicker(BuildContext context) {
-    const PickerData2 = '''
-[
-    [
-        1,
-        2,
-        3,
-        4
-    ],
-    [
-        11,
-        22,
-        33,
-        44
-    ],
-    [
-        "aaa",
-        "bbb",
-        "ccc"
-    ]
-]
-    ''';
-    const PickerData = '''
-[
-    {
-        "a": [
-            {
-                "a1": [
-                    1,
-                    2,
-                    3,
-                    4
-                ]
-            },
-            {
-                "a2": [
-                    5,
-                    6,
-                    7,
-                    8
-                ]
-            },
-            {
-                "a3": [
-                    9,
-                    10,
-                    11,
-                    12
-                ]
-            }
-        ]
-    },
-    {
-        "b": [
-            {
-                "b1": [
-                    11,
-                    22,
-                    33,
-                    44
-                ]
-            },
-            {
-                "b2": [
-                    55,
-                    66,
-                    77,
-                    88
-                ]
-            },
-            {
-                "b3": [
-                    99,
-                    1010,
-                    1111,
-                    1212
-                ]
-            }
-        ]
-    },
-    {
-        "c": [
-            {
-                "c1": [
-                    "a",
-                    "b",
-                    "c"
-                ]
-            },
-            {
-                "c2": [
-                    "aa",
-                    "bb",
-                    "cc"
-                ]
-            },
-            {
-                "c3": [
-                    "aaa",
-                    "bbb",
-                    "ccc"
-                ]
-            }
-        ]
-    }
-]
-    ''';
-
-    const PickerData3 = '''
-
-    [
-    [
-        "aaa",
-        "bbb",
-        "ccc"
-    ]
-           
-    ]
-
-    ''';
-
-    print("************* PICKER ***");
-
+//  showPicker(BuildContext context) {
+//    const PickerData2 = '''
+//[
+//    [
+//        1,
+//        2,
+//        3,
+//        4
+//    ],
+//    [
+//        11,
+//        22,
+//        33,
+//        44
+//    ],
+//    [
+//        "aaa",
+//        "bbb",
+//        "ccc"
+//    ]
+//]
+//    ''';
+//    const PickerData = '''
+//[
+//    {
+//        "a": [
+//            {
+//                "a1": [
+//                    1,
+//                    2,
+//                    3,
+//                    4
+//                ]
+//            },
+//            {
+//                "a2": [
+//                    5,
+//                    6,
+//                    7,
+//                    8
+//                ]
+//            },
+//            {
+//                "a3": [
+//                    9,
+//                    10,
+//                    11,
+//                    12
+//                ]
+//            }
+//        ]
+//    },
+//    {
+//        "b": [
+//            {
+//                "b1": [
+//                    11,
+//                    22,
+//                    33,
+//                    44
+//                ]
+//            },
+//            {
+//                "b2": [
+//                    55,
+//                    66,
+//                    77,
+//                    88
+//                ]
+//            },
+//            {
+//                "b3": [
+//                    99,
+//                    1010,
+//                    1111,
+//                    1212
+//                ]
+//            }
+//        ]
+//    },
+//    {
+//        "c": [
+//            {
+//                "c1": [
+//                    "a",
+//                    "b",
+//                    "c"
+//                ]
+//            },
+//            {
+//                "c2": [
+//                    "aa",
+//                    "bb",
+//                    "cc"
+//                ]
+//            },
+//            {
+//                "c3": [
+//                    "aaa",
+//                    "bbb",
+//                    "ccc"
+//                ]
+//            }
+//        ]
+//    }
+//]
+//    ''';
+//
+//    const PickerData3 = '''
+//
+//    [
+//    [
+//        "aaa",
+//        "bbb",
+//        "ccc"
+//    ]
+//
+//    ]
+//
+//    ''';
+//
+//    print("************* PICKER ***");
+//
+////    new Picker(
+////        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
+////        hideHeader: true,
+////        title: new Text("Select Data"),
+////        onConfirm: (Picker picker, List value) {
+////          print("1:: " + value.toString() + "  2:: ");
+////          print(picker.getSelectedValues());
+////        }
+////    ).showDialog(context);
+//
+//    var x = new JsonDecoder().convert(PickerData3);
+//    print("**JSON**:  " + x.runtimeType.toString() + " : " + x.toString());
+//   // List<dynamic> a = ["aa", "bb"];
+//    var a = new List<dynamic>();
+//    a.add("1231234");
+//    a.add("bbbbb");
+//
+//    List<dynamic> b = [a];
+//    print(b.toString());
+//
 //    new Picker(
-//        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
+//        //works with an array of array
+//        //adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData3), isArray: true),
+//
+//        adapter: PickerDataAdapter<String>(pickerdata: b, isArray: true),
+//
+////      // works
+////        adapter: PickerDataAdapter(data: [
+////          new PickerItem(text: Icon(Icons.add), value: Icons.add, children: [
+////            new PickerItem(text: Icon(Icons.more)),
+////            new PickerItem(text: Icon(Icons.aspect_ratio)),
+////            new PickerItem(text: Icon(Icons.android)),
+////            new PickerItem(text: Icon(Icons.menu)),
+////          ]),
+////          new PickerItem(text: Icon(Icons.title), value: Icons.title, children: [
+////            new PickerItem(text: Icon(Icons.more_vert)),
+////            new PickerItem(text: Icon(Icons.ac_unit)),
+////            new PickerItem(text: Icon(Icons.access_alarm)),
+////            new PickerItem(text: Icon(Icons.account_balance)),
+////          ]),
+////
+////          new PickerItem(text: Icon(Icons.title), value: Icons.title),
+////        ]),
+//
 //        hideHeader: true,
-//        title: new Text("Select Data"),
+//        title: new Text("Please Select"),
 //        onConfirm: (Picker picker, List value) {
-//          print("1:: " + value.toString() + "  2:: ");
+//          print(value.toString());
 //          print(picker.getSelectedValues());
 //        }
 //    ).showDialog(context);
-
-    var x = new JsonDecoder().convert(PickerData3);
-    print("**JSON**:  " + x.runtimeType.toString() + " : " + x.toString());
-   // List<dynamic> a = ["aa", "bb"];
-    var a = new List<dynamic>();
-    a.add("1231234");
-    a.add("bbbbb");
-
-    List<dynamic> b = [a];
-    print(b.toString());
-
-    new Picker(
-        //works with an array of array
-        //adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData3), isArray: true),
-
-        adapter: PickerDataAdapter<String>(pickerdata: b, isArray: true),
-
-//      // works
-//        adapter: PickerDataAdapter(data: [
-//          new PickerItem(text: Icon(Icons.add), value: Icons.add, children: [
-//            new PickerItem(text: Icon(Icons.more)),
-//            new PickerItem(text: Icon(Icons.aspect_ratio)),
-//            new PickerItem(text: Icon(Icons.android)),
-//            new PickerItem(text: Icon(Icons.menu)),
-//          ]),
-//          new PickerItem(text: Icon(Icons.title), value: Icons.title, children: [
-//            new PickerItem(text: Icon(Icons.more_vert)),
-//            new PickerItem(text: Icon(Icons.ac_unit)),
-//            new PickerItem(text: Icon(Icons.access_alarm)),
-//            new PickerItem(text: Icon(Icons.account_balance)),
-//          ]),
-//
-//          new PickerItem(text: Icon(Icons.title), value: Icons.title),
-//        ]),
-
-        hideHeader: true,
-        title: new Text("Please Select"),
-        onConfirm: (Picker picker, List value) {
-          print(value.toString());
-          print(picker.getSelectedValues());
-        }
-    ).showDialog(context);
-  }
+//  }
 
   _processLogin() async {
 
@@ -414,198 +410,118 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
-
-  Future<Credentials> getToken() async {
-    const authenticateUrl =
-        "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
-
-    const clientId = 'testapp-vylt';
-    const redirectUrl = 'http://localhost:3000/callback';
-    const appSecret = 'legdky8lt3n5r622p4hfbi';
-    const tokenUrl = 'https://auth.truelayer.com/connect/token';
-
-    Stream<String> onCode = await _localServer();
-    final flutterWebviewPlugin = new FlutterWebviewPlugin();
-
-    // direct user to authentication server and retrieve the authorisation code
-    flutterWebviewPlugin.launch(authenticateUrl);
-    final String code = await onCode.first;
-
-    // post retrieved authorisation code to the server and exchange for a access token
-    final http.Response response = await http.post(tokenUrl, body: {
-      'client_id': clientId,
-      'redirect_uri': redirectUrl,
-      'client_secret': appSecret,
-      'code': code,
-      'grant_type': 'authorization_code'
-    });
-
-    flutterWebviewPlugin.close();
-
-    // print("getToken ********************* " + response.body);
-    //return new Token.fromMap(jsonDecode(response.body));
-    return new Credentials.fromMap(jsonDecode(response.body));
-  }
-
-  // server that listens to the postback from the authentication server
-  Future<Stream<String>> _localServer() async {
-    final StreamController<String> onCode = new StreamController();
-    HttpServer server =
-        await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
-    server.listen((HttpRequest request) async {
-      final String code = request.uri.queryParameters["code"];
-      request.response
-        ..statusCode = 200
-        ..headers.set("Content-Type", ContentType.html.mimeType)
-        ..write("<html>window closing</html>");
-      await request.response.close();
-      await server.close(force: true);
-      onCode.add(code);
-      await onCode.close();
-    });
-
-    return onCode.stream;
-  }
-}
-
-class Credentials {
-
-  // ** code to make this a singleton by storing internal reference to itself
-  static final Credentials _singleton = new Credentials._internal();
-  factory Credentials() => _singleton;  // factory constructor, returns static variable
-  Credentials._internal();  // private, named constructor
-  // **
-
-  // assign token from the json map
-  static String _token;
-  Credentials.fromMap(Map json) {
-    _token = json['access_token'];
-  }
-
-  // public getter for the static variable
-  String get getToken => _token;
-}
-
-class Token {
-  String _access;
-  String get getAccess => _access;
-
-  Token.fromMap(Map json) {
-    _access = json['access_token'];
-  }
 }
 
 
-
-class AccountListScreen extends StatelessWidget {
-
-  final AccountsDTO accountsDTO;
-
-  // In the constructor, requires the accounts DTO
-  AccountListScreen({Key key, @required this.accountsDTO}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    var accounts = accountsDTO.accounts;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Accounts'),
-      ),
-      body: ListView.builder(
-        itemCount: accounts.length,
-        itemBuilder: (context, index) {
-
-          var item = accounts[index];
-
-          return ListTile(
-            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
-
-            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
-            subtitle: Text(item.account_id),
-
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => OneAccountScreen(account : item),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-class OneAccountScreen extends StatelessWidget {
-
-  final Account account;
-
-  // In the constructor, requires the accounts DTO
-  OneAccountScreen({Key key, @required this.account}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(account.accountNumber.sort_code + " " + account.accountNumber.number),
-      ),
-      body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) {
-
-          var item = account;
-
-          return ListTile(
-            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
-
-            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
-            subtitle: Text(item.account_id),
-
-            onTap: () { _getTransactions();
+//class AccountListScreen extends StatelessWidget {
+//
+//  final AccountsDTO accountsDTO;
+//
+//  // In the constructor, requires the accounts DTO
+//  AccountListScreen({Key key, @required this.accountsDTO}) : super(key: key);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//
+//    var accounts = accountsDTO.accounts;
+//
+//    return Scaffold(
+//      appBar: AppBar(
+//        title: Text('AccountListScreen'),
+//      ),
+//      body: ListView.builder(
+//        itemCount: accounts.length,
+//        itemBuilder: (context, index) {
+//
+//          var item = accounts[index];
+//
+//          return ListTile(
+//            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+//
+//            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
+//            subtitle: Text(item.account_id),
+//
+//            onTap: () {
 //              Navigator.push(
 //                context,
 //                MaterialPageRoute(
-//                  builder: (context) => AccountListScreen(todo: todos[index]),
+//                  builder: (context) => OneAccountScreen(account : item),
 //                ),
 //              );
-            },
-          );
-        },
-      ),
-    );
-  }
+//            },
+//          );
+//        },
+//      ),
+//    );
+//  }
+//}
 
-  _getTransactions() async {
-//    accessToken = await getToken();
-//    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
-    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
 
-    // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
-    const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
-
-    var x = new Credentials().getToken;
-
-    final response = await http.get(
-      getAccountTransactionsUri,
-      headers: {
-        'authorization': 'bearer $x',
-        'content-type': 'application/json'
-      },
-    );
-
-    //txt.text = DateTime.now().second.toString() + ": Account: ";
-
-    print("transactions ********************* " + response.body);
-
-  }
-
-}
+//class OneAccountScreen extends StatelessWidget {
+//
+//  final Account account;
+//
+//  // In the constructor, requires the accounts DTO
+//  OneAccountScreen({Key key, @required this.account}) : super(key: key);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//
+//    return Scaffold(
+//      appBar: AppBar(
+//        title: Text(account.accountNumber.sort_code + " " + account.accountNumber.number),
+//      ),
+//      body: ListView.builder(
+//        itemCount: 1,
+//        itemBuilder: (context, index) {
+//
+//          var item = account;
+//
+//          return ListTile(
+//            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+//
+//            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
+//            subtitle: Text(item.account_id),
+//
+//            onTap: () { _getTransactions();
+////              Navigator.push(
+////                context,
+////                MaterialPageRoute(
+////                  builder: (context) => AccountListScreen(todo: todos[index]),
+////                ),
+////              );
+//            },
+//          );
+//        },
+//      ),
+//    );
+//  }
+//
+//  _getTransactions() async {
+////    accessToken = await getToken();
+////    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
+//    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
+//
+//    // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
+//    const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
+//
+//    var x = new Credentials().getToken;
+//
+//    final response = await http.get(
+//      getAccountTransactionsUri,
+//      headers: {
+//        'authorization': 'bearer $x',
+//        'content-type': 'application/json'
+//      },
+//    );
+//
+//    //txt.text = DateTime.now().second.toString() + ": Account: ";
+//
+//    print("transactions ********************* " + response.body);
+//
+//  }
+//
+//}
 
 
 //class ContactList extends StatelessWidget {
