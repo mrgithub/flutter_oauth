@@ -18,7 +18,8 @@ import 'package:flutter_picker/flutter_picker.dart';
 
 void main() => runApp(new MyApp());
 
-Token accessToken;
+//Token accessToken;
+//Credentials credentials = new Credentials();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -155,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const oneAccountUri =
         "https://api.truelayer.com/data/v1/accounts/$oneAccountId";
 
-    var x = accessToken.getAccess;
+    var x = new Credentials().getToken;
 
     final response = await http.get(
       oneAccountUri,
@@ -176,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const accountBalanceUri =
         "https://api.truelayer.com/data/v1/accounts/$oneAccountId/balance";
 
-    var token = accessToken.getAccess;
+    var token = new Credentials().getToken;
 
     final response = await http.get(
       accountBalanceUri,
@@ -198,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _getAccountsList() async {
     const accountListUri = "https://api.truelayer.com/data/v1/accounts";
 
-    var token = accessToken.getAccess;
+    var token = new Credentials().getToken;
 
     final response = await http.get(
       accountListUri,
@@ -407,13 +408,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _processLogin() async {
-    accessToken = await getToken();
-    //Token.fromMap = await getToken();
 
-    txt.text = DateTime.now().second.toString() + ": " + accessToken._access;
+    Credentials credentials = await getToken();
+    txt.text = DateTime.now().toLocal().toString() + ": " + new Credentials().getToken;// accessToken._access;
+
   }
 
-  Future<Token> getToken() async {
+  Future<Credentials> getToken() async {
     const authenticateUrl =
         "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
 
@@ -441,7 +442,8 @@ class _MyHomePageState extends State<MyHomePage> {
     flutterWebviewPlugin.close();
 
     // print("getToken ********************* " + response.body);
-    return new Token.fromMap(jsonDecode(response.body));
+    //return new Token.fromMap(jsonDecode(response.body));
+    return new Credentials.fromMap(jsonDecode(response.body));
   }
 
   // server that listens to the postback from the authentication server
@@ -463,6 +465,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return onCode.stream;
   }
+}
+
+class Credentials {
+
+  // ** code to make this a singleton by storing internal reference to itself
+  static final Credentials _singleton = new Credentials._internal();
+  factory Credentials() => _singleton;  // factory constructor, returns static variable
+  Credentials._internal();  // private, named constructor
+  // **
+
+  // assign token from the json map
+  static String token;
+  Credentials.fromMap(Map json) {
+    token = json['access_token'];
+  }
+
+  // public getter for the static variable
+  String get getToken => token;
 }
 
 class Token {
@@ -568,7 +588,7 @@ class OneAccountScreen extends StatelessWidget {
     // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
     const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
 
-    var x = accessToken.getAccess;
+    var x = new Credentials().getToken;
 
     final response = await http.get(
       getAccountTransactionsUri,
