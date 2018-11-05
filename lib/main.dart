@@ -225,7 +225,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  _processLogin() async {
 
+    await getCredentials();
+    txt.text = DateTime.now().toLocal().toString() + ": " + new Credentials().getToken;// accessToken._access;
+
+  }
 
 //  showPicker(BuildContext context) {
 //    const PickerData2 = '''
@@ -403,167 +408,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //    ).showDialog(context);
 //  }
 
-  _processLogin() async {
-
-    Credentials credentials = await getToken();
-    txt.text = DateTime.now().toLocal().toString() + ": " + new Credentials().getToken;// accessToken._access;
-
-  }
 
 }
 
-
-//class AccountListScreen extends StatelessWidget {
-//
-//  final AccountsDTO accountsDTO;
-//
-//  // In the constructor, requires the accounts DTO
-//  AccountListScreen({Key key, @required this.accountsDTO}) : super(key: key);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//
-//    var accounts = accountsDTO.accounts;
-//
-//    return Scaffold(
-//      appBar: AppBar(
-//        title: Text('AccountListScreen'),
-//      ),
-//      body: ListView.builder(
-//        itemCount: accounts.length,
-//        itemBuilder: (context, index) {
-//
-//          var item = accounts[index];
-//
-//          return ListTile(
-//            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
-//
-//            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
-//            subtitle: Text(item.account_id),
-//
-//            onTap: () {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => OneAccountScreen(account : item),
-//                ),
-//              );
-//            },
-//          );
-//        },
-//      ),
-//    );
-//  }
-//}
-
-
-//class OneAccountScreen extends StatelessWidget {
-//
-//  final Account account;
-//
-//  // In the constructor, requires the accounts DTO
-//  OneAccountScreen({Key key, @required this.account}) : super(key: key);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//
-//    return Scaffold(
-//      appBar: AppBar(
-//        title: Text(account.accountNumber.sort_code + " " + account.accountNumber.number),
-//      ),
-//      body: ListView.builder(
-//        itemCount: 1,
-//        itemBuilder: (context, index) {
-//
-//          var item = account;
-//
-//          return ListTile(
-//            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
-//
-//            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
-//            subtitle: Text(item.account_id),
-//
-//            onTap: () { _getTransactions();
-////              Navigator.push(
-////                context,
-////                MaterialPageRoute(
-////                  builder: (context) => AccountListScreen(todo: todos[index]),
-////                ),
-////              );
-//            },
-//          );
-//        },
-//      ),
-//    );
-//  }
-//
-//  _getTransactions() async {
-////    accessToken = await getToken();
-////    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
-//    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
-//
-//    // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
-//    const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
-//
-//    var x = new Credentials().getToken;
-//
-//    final response = await http.get(
-//      getAccountTransactionsUri,
-//      headers: {
-//        'authorization': 'bearer $x',
-//        'content-type': 'application/json'
-//      },
-//    );
-//
-//    //txt.text = DateTime.now().second.toString() + ": Account: ";
-//
-//    print("transactions ********************* " + response.body);
-//
-//  }
-//
-//}
-
-
-//class ContactList extends StatelessWidget {
-//
-//  final List<Contact> _contacts;
-//
-//  ContactList(this._contacts);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return new MaterialList(
-//        type: MaterialListType.twoLine,
-//        padding: new EdgeInsets.symmetric(vertical: 8.0),
-//        children: _buildContactList()
-//    );
-//  }
-//
-//  List<_ContactListItem> _buildContactList() {
-//    return _contacts.map((contact) => new _ContactListItem(contact))
-//        .toList();
-//  }
-//
-//}
-//
-//
-//
-//class _ContactListItem extends ListItem {
-//
-//  _ContactListItem(Contact contact) :
-//        super(
-//          title : new Text(contact.fullName),
-//          subtitle: new Text(contact.email),
-//          leading: new CircleAvatar(
-//              child: new Text(contact.fullName[0])
-//          )
-//      );
-//
-//}
-//
-//class Contact {
-//  final String fullName;
-//  final String email;
-//
-//  const Contact({this.fullName, this.email});
-//}

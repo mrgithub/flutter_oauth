@@ -24,7 +24,7 @@ class Credentials {
 }
 
 
-Future<Credentials> getToken() async {
+Future<Credentials> getCredentials() async {
   const authenticateUrl =
       "https://auth.truelayer.com/?response_type=code&client_id=testapp-vylt&nonce=2250806897&scope=info%20accounts%20balance%20transactions%20cards%20offline_access&redirect_uri=http://localhost:3000/callback&enable_mock=true&enable_oauth_providers=true&enable_open_banking_providers=false&enable_credentials_sharing_providers=true";
 
