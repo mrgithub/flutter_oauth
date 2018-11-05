@@ -41,7 +41,7 @@ class AccountListScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OneAccountScreen(transactions : list),
+                  builder: (context) => AccountTransactionsView(transactions : list),
                 ),
               );
             },
@@ -66,7 +66,7 @@ class AccountListScreen extends StatelessWidget {
       },
     );
 
-    //print("transactions ********************* " + response.body);
+    print("transactions ********************* " +_accountId+ response.body);
 
     var transactionsDTO = AccountTransactionsDTO.fromJson(jsonDecode(response.body));
 

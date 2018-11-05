@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/accountTransactionModel.dart';
 
-class OneAccountScreen extends StatelessWidget {
+class AccountTransactionsView extends StatelessWidget {
 
   final List<AccountTransaction> transactions;
 
   // In the constructor, requires the accounts DTO
-  OneAccountScreen({Key key, @required this.transactions}) : super(key: key);
+  AccountTransactionsView({Key key, @required this.transactions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class OneAccountScreen extends StatelessWidget {
 
             //leading: items[index].transaction_type == "DEBIT" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
             title: Text(items[index].description),
-            subtitle: Text(items[index].amount.toString()),
+            subtitle: Text(items[index].transaction_id + " " + items[index].amount.toString()),
 
             onTap: ()  {
 
