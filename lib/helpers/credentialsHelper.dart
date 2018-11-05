@@ -61,16 +61,17 @@ Future<Stream<String>> _localServer() async {
   final StreamController<String> onCode = new StreamController();
   HttpServer server =
   await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
+
   server.listen((HttpRequest request) async {
-    final String code = request.uri.queryParameters["code"];
-    request.response
-      ..statusCode = 200
-      ..headers.set("Content-Type", ContentType.html.mimeType)
-      ..write("<html>window closing</html>");
-    await request.response.close();
-    await server.close(force: true);
-    onCode.add(code);
-    await onCode.close();
+        final String code = request.uri.queryParameters["code"];
+        request.response
+          ..statusCode = 200
+          ..headers.set("Content-Type", ContentType.html.mimeType)
+          ..write("<html>window closing</html>");
+        await request.response.close();
+        await server.close(force: true);
+        onCode.add(code);
+        await onCode.close();
   });
 
   return onCode.stream;

@@ -1,35 +1,39 @@
-import '../models/accountModel.dart';
 import 'package:flutter/material.dart';
-import '../helpers/credentialsHelper.dart';
-import 'package:http/http.dart' as http;
+import '../models/accountTransactionModel.dart';
 
 class OneAccountScreen extends StatelessWidget {
 
-  final Account account;
+  final List<AccountTransaction> transactions;
 
   // In the constructor, requires the accounts DTO
-  OneAccountScreen({Key key, @required this.account}) : super(key: key);
+  OneAccountScreen({Key key, @required this.transactions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
+    var items = transactions;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(account.accountNumber.sort_code + " " + account.accountNumber.number),
+        title: Text ("Transactions"),
       ),
       body: ListView.builder(
-        itemCount: 1,
+        itemCount: transactions.length,
+
         itemBuilder: (context, index) {
 
-          var item = account;
-
           return ListTile(
-            leading: item.account_type == "TRANSACTION" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+//            leading: transactions[index].transaction_type == "DEBIT" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+//            subtitle: Text(transactions[index].description ),
+//            title: Text(transactions[index].merchant_name + " " + transactions[index].amount.toString()),
 
-            title: Text(item.accountNumber.sort_code + " " + item.accountNumber.number),
-            subtitle: Text(item.account_id),
+            //leading: items[index].transaction_type == "DEBIT" ? const Icon(Icons.account_balance) : const Icon(Icons.account_balance_wallet),
+            title: Text(items[index].description),
+            subtitle: Text(items[index].amount.toString()),
 
-            onTap: () { _getTransactions();
+            onTap: ()  {
+
+              //_getTransactions(account);
 //              Navigator.push(
 //                context,
 //                MaterialPageRoute(
@@ -41,30 +45,6 @@ class OneAccountScreen extends StatelessWidget {
         },
       ),
     );
-  }
-
-  _getTransactions() async {
-//    accessToken = await getToken();
-//    txt.text = DateTime.now().second.toString() + ": " + accessToken.getAccess;
-    const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
-
-    // https://api.truelayer.com/data/v1/accounts/${account_id}/transactions?from=${from}&to=${to}
-    const getAccountTransactionsUri = "https://api.truelayer.com/data/v1/accounts/${oneAccountId}";
-
-    var x = new Credentials().getToken;
-
-    final response = await http.get(
-      getAccountTransactionsUri,
-      headers: {
-        'authorization': 'bearer $x',
-        'content-type': 'application/json'
-      },
-    );
-
-    //txt.text = DateTime.now().second.toString() + ": Account: ";
-
-    print("transactions ********************* " + response.body);
-
   }
 
 }
