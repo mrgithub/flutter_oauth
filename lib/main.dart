@@ -10,7 +10,8 @@ import 'helpers/credentialsHelper.dart';
 
 import 'package:flutter_picker/flutter_picker.dart';
 
-import 'views/accountListView.dart';
+import 'views/accountTransactionView.dart';
+import 'views/dashtestview.dart';
 
 void main() => runApp(new MyApp());
 
@@ -133,6 +134,10 @@ class _MyHomePageState extends State<MyHomePage> {
             new RaisedButton(
               onPressed: _getAccountsList,
               child: new Text('List Accounts'),
+            ),
+            new RaisedButton(
+              onPressed: _horizontalTest,
+              child: new Text('Horizontal test'),
             ),
             new TextField(controller: txt),
           ],
@@ -409,5 +414,16 @@ class _MyHomePageState extends State<MyHomePage> {
 //  }
 
 
+
+  void _horizontalTest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DashTestView(),
+      ),
+    );
+  }
 }
+
+
 
