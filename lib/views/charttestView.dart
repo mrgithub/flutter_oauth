@@ -1,7 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class SecondScreen extends StatefulWidget {
+class ChartTestView extends StatefulWidget {
 ////  @override
 ////  Widget build(BuildContext ctxt) {
 ////    return new Scaffold(
@@ -15,15 +15,15 @@ class SecondScreen extends StatefulWidget {
 ////            }));
 //  }
 
-  SecondScreen({Key key, this.title}) : super(key: key);
+  ChartTestView({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _SecondScreenState createState() => new _SecondScreenState();
+  _ChartTestViewState createState() => new _ChartTestViewState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class _ChartTestViewState extends State<ChartTestView> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -75,10 +75,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
             new Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .display1,
+              style: Theme.of(context).textTheme.display1,
             ),
             chartWidget,
           ],
@@ -100,5 +97,5 @@ class ClicksPerYear {
 
   ClicksPerYear(this.year, this.clicks, Color color)
       : this.color = new charts.Color(
-      r: color.red, g: color.green, b: color.blue, a: color.alpha);
+            r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }

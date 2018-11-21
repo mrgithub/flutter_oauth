@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_oauth/views/chartexampleView.dart';
+import 'package:flutter_oauth/views/charttestView.dart';
+import 'package:flutter_oauth/views/simpleBarChartExample.dart';
 import 'package:http/http.dart' as http;
 
 import 'dtos/accountBalanceDTO.dart';
@@ -145,6 +146,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _chartTest,
               child: new Text('Chart test'),
             ),
+            new RaisedButton(
+              onPressed: _simpleBarChartTest,
+              child: new Text('SimpleBarChart test'),
+            ),
             new TextField(controller: txt),
           ],
         ),
@@ -154,6 +159,13 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  void _simpleBarChartTest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SimpleBarChart.withSampleData()),
     );
   }
 
@@ -170,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SecondScreen(title: 'chart test'),
+        builder: (context) => ChartTestView(title: 'chart test'),
       ),
     );
   }
