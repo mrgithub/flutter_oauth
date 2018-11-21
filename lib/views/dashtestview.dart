@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DashTestView extends StatelessWidget {
+class MultipleHorizontalButtonsView extends StatelessWidget {
 
   // DashTestView({Key key, @required this.accountsDTO}) : super(key: key);
 
@@ -43,13 +43,15 @@ class ButtonOptionsState extends State<ButtonOptions> {
 Widget _buildItems(int index) {
   return new Container(
     // color: Colors.blue,
+  //var txt = new TextEditingController();
+
     padding: const EdgeInsets.all(10.0),
     child: new Row(
       children: [
         new Row(children: [
           new RaisedButton(
-            child: new Text("Hii"),
-            onPressed: () {},
+            child: new Text("HiB" + index.toString()),
+            onPressed: () { },
           ),
         ])
       ],

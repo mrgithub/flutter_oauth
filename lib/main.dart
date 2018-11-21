@@ -151,6 +151,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _horizontalTest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultipleHorizontalButtonsView(),
+      ),
+    );
+  }
+
   _getOneAccount() async {
     const String oneAccountId = "56c7b029e0f8ec5a2334fb0ffc2fface";
 
@@ -413,16 +422,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //    ).showDialog(context);
 //  }
 
-
-
-  void _horizontalTest() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DashTestView(),
-      ),
-    );
-  }
 }
 
 
