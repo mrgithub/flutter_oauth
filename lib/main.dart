@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_oauth/views/chartexampleView.dart';
 import 'package:http/http.dart' as http;
 
 import 'dtos/accountBalanceDTO.dart';
 import 'dtos/accountsDTO.dart';
 import 'helpers/credentialsHelper.dart';
 import 'views/accountTransactionView.dart';
-import 'views/dashtesterView.dart';
 import 'views/multipleHorizontalButtonsView.dart';
+import 'views/sparklineView.dart';
 
 void main() => runApp(new MyApp());
 
@@ -137,8 +138,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: new Text('Horizontal test'),
             ),
             new RaisedButton(
+              onPressed: _sparkTest,
+              child: new Text('Spark test'),
+            ),
+            new RaisedButton(
               onPressed: _dashTest,
-              child: new Text('Dash test'),
+              child: new Text('Chart test'),
             ),
             new TextField(controller: txt),
           ],
@@ -152,11 +157,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _sparkTest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SparkLineView(),
+      ),
+    );
+  }
+
   void _dashTest() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DashTestView(),
+        builder: (context) => SecondScreen(),
       ),
     );
   }
@@ -251,187 +265,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _processLogin() async {
     await getCredentials();
-    txt.text = DateTime.now().toLocal().toString() + ": " + new Credentials().getToken;// accessToken._access;
-
+    txt.text = DateTime.now().toLocal().toString() +
+        ": " +
+        new Credentials().getToken; // accessToken._access;
   }
-
-//  showPicker(BuildContext context) {
-//    const PickerData2 = '''
-//[
-//    [
-//        1,
-//        2,
-//        3,
-//        4
-//    ],
-//    [
-//        11,
-//        22,
-//        33,
-//        44
-//    ],
-//    [
-//        "aaa",
-//        "bbb",
-//        "ccc"
-//    ]
-//]
-//    ''';
-//    const PickerData = '''
-//[
-//    {
-//        "a": [
-//            {
-//                "a1": [
-//                    1,
-//                    2,
-//                    3,
-//                    4
-//                ]
-//            },
-//            {
-//                "a2": [
-//                    5,
-//                    6,
-//                    7,
-//                    8
-//                ]
-//            },
-//            {
-//                "a3": [
-//                    9,
-//                    10,
-//                    11,
-//                    12
-//                ]
-//            }
-//        ]
-//    },
-//    {
-//        "b": [
-//            {
-//                "b1": [
-//                    11,
-//                    22,
-//                    33,
-//                    44
-//                ]
-//            },
-//            {
-//                "b2": [
-//                    55,
-//                    66,
-//                    77,
-//                    88
-//                ]
-//            },
-//            {
-//                "b3": [
-//                    99,
-//                    1010,
-//                    1111,
-//                    1212
-//                ]
-//            }
-//        ]
-//    },
-//    {
-//        "c": [
-//            {
-//                "c1": [
-//                    "a",
-//                    "b",
-//                    "c"
-//                ]
-//            },
-//            {
-//                "c2": [
-//                    "aa",
-//                    "bb",
-//                    "cc"
-//                ]
-//            },
-//            {
-//                "c3": [
-//                    "aaa",
-//                    "bbb",
-//                    "ccc"
-//                ]
-//            }
-//        ]
-//    }
-//]
-//    ''';
-//
-//    const PickerData3 = '''
-//
-//    [
-//    [
-//        "aaa",
-//        "bbb",
-//        "ccc"
-//    ]
-//
-//    ]
-//
-//    ''';
-//
-//    print("************* PICKER ***");
-//
-////    new Picker(
-////        adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData)),
-////        hideHeader: true,
-////        title: new Text("Select Data"),
-////        onConfirm: (Picker picker, List value) {
-////          print("1:: " + value.toString() + "  2:: ");
-////          print(picker.getSelectedValues());
-////        }
-////    ).showDialog(context);
-//
-//    var x = new JsonDecoder().convert(PickerData3);
-//    print("**JSON**:  " + x.runtimeType.toString() + " : " + x.toString());
-//   // List<dynamic> a = ["aa", "bb"];
-//    var a = new List<dynamic>();
-//    a.add("1231234");
-//    a.add("bbbbb");
-//
-//    List<dynamic> b = [a];
-//    print(b.toString());
-//
-//    new Picker(
-//        //works with an array of array
-//        //adapter: PickerDataAdapter<String>(pickerdata: new JsonDecoder().convert(PickerData3), isArray: true),
-//
-//        adapter: PickerDataAdapter<String>(pickerdata: b, isArray: true),
-//
-////      // works
-////        adapter: PickerDataAdapter(data: [
-////          new PickerItem(text: Icon(Icons.add), value: Icons.add, children: [
-////            new PickerItem(text: Icon(Icons.more)),
-////            new PickerItem(text: Icon(Icons.aspect_ratio)),
-////            new PickerItem(text: Icon(Icons.android)),
-////            new PickerItem(text: Icon(Icons.menu)),
-////          ]),
-////          new PickerItem(text: Icon(Icons.title), value: Icons.title, children: [
-////            new PickerItem(text: Icon(Icons.more_vert)),
-////            new PickerItem(text: Icon(Icons.ac_unit)),
-////            new PickerItem(text: Icon(Icons.access_alarm)),
-////            new PickerItem(text: Icon(Icons.account_balance)),
-////          ]),
-////
-////          new PickerItem(text: Icon(Icons.title), value: Icons.title),
-////        ]),
-//
-//        hideHeader: true,
-//        title: new Text("Please Select"),
-//        onConfirm: (Picker picker, List value) {
-//          print(value.toString());
-//          print(picker.getSelectedValues());
-//        }
-//    ).showDialog(context);
-//  }
-
 }
-
-
-
