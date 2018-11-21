@@ -1,17 +1,14 @@
-import 'package:flutter/material.dart';
-
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'dtos/accountBalanceDTO.dart';
 import 'dtos/accountsDTO.dart';
-
 import 'helpers/credentialsHelper.dart';
-
-import 'package:flutter_picker/flutter_picker.dart';
-
 import 'views/accountTransactionView.dart';
-import 'views/dashtestview.dart';
+import 'views/dashtesterView.dart';
+import 'views/multipleHorizontalButtonsView.dart';
 
 void main() => runApp(new MyApp());
 
@@ -139,6 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _horizontalTest,
               child: new Text('Horizontal test'),
             ),
+            new RaisedButton(
+              onPressed: _dashTest,
+              child: new Text('Dash test'),
+            ),
             new TextField(controller: txt),
           ],
         ),
@@ -148,6 +149,15 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  void _dashTest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DashTestView(),
+      ),
     );
   }
 
@@ -198,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     AccountBalanceDTO d =
-        new AccountBalanceDTO.fromJson(jsonDecode(response.body));
+    new AccountBalanceDTO.fromJson(jsonDecode(response.body));
 
     print("account balance ********************* " + response.body);
     txt.text = DateTime.now().second.toString() +
@@ -240,7 +250,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _processLogin() async {
-
     await getCredentials();
     txt.text = DateTime.now().toLocal().toString() + ": " + new Credentials().getToken;// accessToken._access;
 

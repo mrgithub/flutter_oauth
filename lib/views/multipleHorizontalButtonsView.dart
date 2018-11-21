@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class MultipleHorizontalButtonsView extends StatelessWidget {
-
   // DashTestView({Key key, @required this.accountsDTO}) : super(key: key);
 
   @override
@@ -9,7 +8,6 @@ class MultipleHorizontalButtonsView extends StatelessWidget {
     return new MaterialApp(home: new ButtonOptions());
   }
 }
-
 
 class ButtonOptions extends StatefulWidget {
   @override
@@ -43,7 +41,7 @@ class ButtonOptionsState extends State<ButtonOptions> {
 Widget _buildItems(int index) {
   return new Container(
     // color: Colors.blue,
-  //var txt = new TextEditingController();
+    //var txt = new TextEditingController();
 
     padding: const EdgeInsets.all(10.0),
     child: new Row(
@@ -51,7 +49,7 @@ Widget _buildItems(int index) {
         new Row(children: [
           new RaisedButton(
             child: new Text("HiB" + index.toString()),
-            onPressed: () { },
+            onPressed: () {},
           ),
         ])
       ],
