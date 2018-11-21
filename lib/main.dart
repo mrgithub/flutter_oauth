@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: new Text('Spark test'),
             ),
             new RaisedButton(
-              onPressed: _dashTest,
+              onPressed: _chartTest,
               child: new Text('Chart test'),
             ),
             new TextField(controller: txt),
@@ -166,11 +166,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _dashTest() {
+  void _chartTest() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SecondScreen(),
+        builder: (context) => SecondScreen(title: 'chart test'),
       ),
     );
   }
